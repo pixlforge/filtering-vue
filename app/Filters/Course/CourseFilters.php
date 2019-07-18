@@ -11,5 +11,6 @@ class CourseFilters extends FiltersAbstract
         'difficulty' => DifficultyFilter::class,
         'type' => TypeFilter::class,
         'subject' => SubjectFilter::class,
+        'started' => StartedFilter::class,
     ];    
 }
