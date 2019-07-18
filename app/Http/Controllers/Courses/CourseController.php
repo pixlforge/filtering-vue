@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Courses;
 
 use App\Models\Course;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class CourseController extends Controller
 {
@@ -15,6 +15,13 @@ class CourseController extends Controller
      */
     public function index(Request $request)
     {
-        return Course::filter($request)->get();
+        return Course::filter($request, $this->getFilters())->get();
+    }
+
+    protected function getFilters()
+    {
+        return [
+            //
+        ];
     }
 }
