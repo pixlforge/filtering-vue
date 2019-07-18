@@ -3,6 +3,7 @@
 namespace App\Filters\Course;
 
 use App\Filters\FiltersAbstract;
+use App\Filters\Course\Ordering\ViewsOrder;
 
 class CourseFilters extends FiltersAbstract
 {
@@ -12,5 +13,6 @@ class CourseFilters extends FiltersAbstract
         'type' => TypeFilter::class,
         'subject' => SubjectFilter::class,
         'started' => StartedFilter::class,
+        'views' => ViewsOrder::class,
     ];    
 }
