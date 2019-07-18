@@ -21,4 +21,14 @@ class Course extends Model
     {
         return (new CourseFilters($request))->add($filters)->filter($builder);
     }
+
+    /**
+     * Subjects relationship.
+     *
+     * @return void
+     */
+    public function subjects()
+    {
+        return $this->morphToMany(Subject::class, 'subjectable');
+    }
 }
