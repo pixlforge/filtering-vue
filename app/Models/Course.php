@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Filters\Course\CourseFilters;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class Course extends Model
 {
@@ -14,4 +16,9 @@ class Course extends Model
     protected $casts = [
         'free' => 'boolean',
     ];
+
+    public function scopeFilter(Builder $builder, $request)
+    {
+        return (new CourseFilters($request))->filter($builder);
+    }
 }
