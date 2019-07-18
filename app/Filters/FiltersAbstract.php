@@ -4,7 +4,6 @@ namespace App\Filters;
 
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Arr;
 
 abstract class FiltersAbstract
 {
@@ -40,11 +39,9 @@ abstract class FiltersAbstract
      */
     public function filter(Builder $builder)
     {
-        foreach ($this->getFilters() as $filter => $class) {
-            dump($this->resolveFilter($filter));
+        foreach ($this->getFilters() as $filter => $value) {
+            $this->resolveFilter($filter)->filter($builder, $value);
         }
-
-        die();
 
         return $builder;
     }
