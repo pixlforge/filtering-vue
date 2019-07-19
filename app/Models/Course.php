@@ -15,6 +15,7 @@ class Course extends Model
      */
     protected $casts = [
         'free' => 'boolean',
+        'started' => 'boolean',
     ];
 
     /**
@@ -23,7 +24,7 @@ class Course extends Model
      * @var array
      */
     protected $appends = [
-        'started',
+        'started', 'formattedAccess', 'formattedStarted'
     ];
 
     /**
@@ -34,6 +35,26 @@ class Course extends Model
     protected $hidden = [
         'users',
     ];
+
+    /**
+     * Get the formattedAccess attribute.
+     *
+     * @return string
+     */
+    public function getFormattedAccessAttribute()
+    {
+        return $this->free ? 'free' : 'premium';
+    }
+
+    /**
+     * Get the formattedStarted attribute.
+     *
+     * @return string
+     */
+    public function getFormattedStartedAttribute()
+    {
+        return $this->started ? 'Started' : 'Not started';
+    }
 
     public function scopeFilter(Builder $builder, $request, array $filters = [])
     {

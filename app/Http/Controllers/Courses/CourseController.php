@@ -17,10 +17,9 @@ class CourseController extends Controller
     public function index(Request $request)
     {
         return CourseResource::collection(
-            Course::with('subjects')
-                ->latest()
+            Course::with(['subjects', 'users'])
                 ->filter($request, $this->getFilters())
-                ->paginate(2)
+                ->paginate(20)
         );
     }
 
