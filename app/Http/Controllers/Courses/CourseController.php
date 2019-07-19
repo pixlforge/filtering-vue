@@ -15,9 +15,12 @@ class CourseController extends Controller
      */
     public function index(Request $request)
     {
-        return Course::with('subjects')
+        $courses = Course::with('subjects')
+            ->latest()
             ->filter($request, $this->getFilters())
             ->get();
+
+        return response()->json($courses, 200);
     }
 
     protected function getFilters()
