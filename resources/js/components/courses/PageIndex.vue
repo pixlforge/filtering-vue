@@ -12,27 +12,60 @@
       <AppCourseList
         v-if="courses.length"
         :courses="courses"/>
+
+      <AppPagination
+        :meta="meta"
+        @pagination:switched="paginationSwitched"/>
     </div>    
   </div>
 </template>
 
 <script>
 import AppCourseList from "./AppCourseList";
+import AppPagination from '../pagination/AppPagination';
 
 export default {
   components: {
-    AppCourseList
+    AppCourseList,
+    AppPagination,
   },
   data() {
     return {
-      courses: []
+      courses: [],
+      meta: {},
+      currentPage: 1
     };
   },
   mounted() {
-    axios.get('/api/courses')
-      .then(res => {
-        this.courses = res.data.data;
+    this.currentPage = this.$route.query.page;
+    this.getCourses();
+  },
+  methods: {
+    getCourses() {
+      axios.get('/api/courses', {
+        params: {
+          page: this.currentPage
+        }
+      }).then(res => {
+          this.courses = res.data.data;
+          this.meta = res.data.meta;
+        });
+    },
+    paginationSwitched(page) {
+      if (page === this.meta.current_page) {
+        return;
+      }
+
+      this.currentPage = page;
+
+      this.getCourses();
+
+      this.$router.push({
+        query: {
+          page: this.currentPage
+        }
       });
+    }
   }
 }
 </script>

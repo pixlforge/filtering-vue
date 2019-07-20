@@ -4,7 +4,7 @@
       <a href="#">
         <img
           :alt="course.name"
-          src="http://via.placeholder.com/320x320"
+          src="img/320x320.png"
           class="w-full">
       </a>
     </div>

@@ -19,7 +19,7 @@ class CourseController extends Controller
         return CourseResource::collection(
             Course::with(['subjects', 'users'])
                 ->filter($request, $this->getFilters())
-                ->paginate(20)
+                ->paginate(4)
         );
     }
 
