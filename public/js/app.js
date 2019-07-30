@@ -1980,6 +1980,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     endpoint: {
@@ -37720,6 +37723,10 @@ var render = function() {
                   {
                     staticClass:
                       "block hover:bg-blue-300 font-semibold hover:text-white hover:no-underline pl-3 py-2",
+                    class: {
+                      "bg-blue-400 text-white":
+                        _vm.selectedFilters[key] === value
+                    },
                     attrs: { href: "#" },
                     on: {
                       click: function($event) {

@@ -14,6 +14,9 @@
             :key="value">
             <a
               href="#"
+              :class="{
+                'bg-blue-400 text-white': selectedFilters[key] === value
+              }"
               class="block hover:bg-blue-300 font-semibold hover:text-white hover:no-underline pl-3 py-2"
               @click.prevent="activateFilter(key, value)">
               {{ filter }}
