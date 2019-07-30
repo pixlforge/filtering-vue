@@ -36,7 +36,7 @@ export default {
   data() {
     return {
       filters: {},
-      selectedFilters: {}
+      selectedFilters: _.omit(this.$route.query, ['page'])
     }
   },
   mounted() {
@@ -50,7 +50,12 @@ export default {
         [key]: value
       })
 
-      this.$router.push({ query: { ...this.selectedFilters } })
+      this.$router.push({
+        query: {
+          ...this.selectedFilters,
+          page: 1
+        }
+      })
     }
   }
 }

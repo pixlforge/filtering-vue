@@ -4,13 +4,20 @@
       <AppFilters endpoint="/api/courses/filters"></AppFilters>
     </div>
     <div class="w-3/4 bg-white border-2 border-gray-300 rounded-lg ml-3 p-4">
-      <AppCourseList
-        v-if="courses.length"
-        :courses="courses"/>
 
-      <AppPagination
+      <template v-if="courses.length">
+        <AppCourseList :courses="courses"/>
+        
+        <AppPagination
         :meta="meta"
         @pagination:switched="paginationSwitched"/>
+      </template>
+      
+      <template v-else>
+        <p class="text-xl text-center font-bold mt-24">
+          Sorry, we couldn't find any course matching your criteria :(
+        </p>
+      </template>
     </div>    
   </div>
 </template>
@@ -30,18 +37,29 @@ export default {
     return {
       courses: [],
       meta: {},
-      currentPage: 1
+      currentPage: this.$route.query.page,
+      query: this.$route.query
+    }
+  },
+  watch: {
+    '$route.query': {
+      handler(query) {
+        this.query = query
+        this.currentPage = 1
+        this.getCourses()
+      },
+      deep: true
     }
   },
   mounted() {
-    this.currentPage = this.$route.query.page
     this.getCourses()
   },
   methods: {
     getCourses() {
       axios.get('/api/courses', {
         params: {
-          page: this.currentPage
+          page: this.currentPage,
+          ...this.query
         }
       }).then(res => {
           this.courses = res.data.data
@@ -55,12 +73,8 @@ export default {
 
       this.currentPage = page
 
-      this.getCourses()
-
       this.$router.push({
-        query: {
-          page: this.currentPage
-        }
+        query: Object.assign({}, this.query, { page: this.currentPage })
       })
     }
   }

@@ -1990,7 +1990,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   data: function data() {
     return {
       filters: {},
-      selectedFilters: {}
+      selectedFilters: _.omit(this.$route.query, ['page'])
     };
   },
   mounted: function mounted() {
@@ -2004,7 +2004,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     activateFilter: function activateFilter(key, value) {
       this.selectedFilters = Object.assign({}, this.selectedFilters, _defineProperty({}, key, value));
       this.$router.push({
-        query: _objectSpread({}, this.selectedFilters)
+        query: _objectSpread({}, this.selectedFilters, {
+          page: 1
+        })
       });
     }
   }
@@ -2024,6 +2026,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AppFilters__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AppFilters */ "./resources/js/components/courses/AppFilters.vue");
 /* harmony import */ var _AppCourseList__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AppCourseList */ "./resources/js/components/courses/AppCourseList.vue");
 /* harmony import */ var _pagination_AppPagination__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../pagination/AppPagination */ "./resources/js/components/pagination/AppPagination.vue");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2054,11 +2069,21 @@ __webpack_require__.r(__webpack_exports__);
     return {
       courses: [],
       meta: {},
-      currentPage: 1
+      currentPage: this.$route.query.page,
+      query: this.$route.query
     };
   },
+  watch: {
+    '$route.query': {
+      handler: function handler(query) {
+        this.query = query;
+        this.currentPage = 1;
+        this.getCourses();
+      },
+      deep: true
+    }
+  },
   mounted: function mounted() {
-    this.currentPage = this.$route.query.page;
     this.getCourses();
   },
   methods: {
@@ -2066,9 +2091,9 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       axios.get('/api/courses', {
-        params: {
+        params: _objectSpread({
           page: this.currentPage
-        }
+        }, this.query)
       }).then(function (res) {
         _this.courses = res.data.data;
         _this.meta = res.data.meta;
@@ -2080,11 +2105,10 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       this.currentPage = page;
-      this.getCourses();
       this.$router.push({
-        query: {
+        query: Object.assign({}, this.query, {
           page: this.currentPage
-        }
+        })
       });
     }
   }
@@ -37754,15 +37778,23 @@ var render = function() {
       },
       [
         _vm.courses.length
-          ? _c("AppCourseList", { attrs: { courses: _vm.courses } })
-          : _vm._e(),
-        _vm._v(" "),
-        _c("AppPagination", {
-          attrs: { meta: _vm.meta },
-          on: { "pagination:switched": _vm.paginationSwitched }
-        })
+          ? [
+              _c("AppCourseList", { attrs: { courses: _vm.courses } }),
+              _vm._v(" "),
+              _c("AppPagination", {
+                attrs: { meta: _vm.meta },
+                on: { "pagination:switched": _vm.paginationSwitched }
+              })
+            ]
+          : [
+              _c("p", { staticClass: "text-xl text-center font-bold mt-24" }, [
+                _vm._v(
+                  "\n        Sorry, we couldn't find any course matching your criteria :(\n      "
+                )
+              ])
+            ]
       ],
-      1
+      2
     )
   ])
 }
