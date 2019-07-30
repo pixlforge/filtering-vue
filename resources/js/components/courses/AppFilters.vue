@@ -14,7 +14,8 @@
             :key="value">
             <a
               href="#"
-              class="block hover:bg-blue-300 font-semibold hover:text-white hover:no-underline pl-3 py-2">
+              class="block hover:bg-blue-300 font-semibold hover:text-white hover:no-underline pl-3 py-2"
+              @click.prevent="activateFilter(key, value)">
               {{ filter }}
             </a>
           </li>
@@ -34,13 +35,23 @@ export default {
   },
   data() {
     return {
-      filters: {}
+      filters: {},
+      selectedFilters: {}
     }
   },
   mounted() {
     axios.get(this.endpoint).then(res => {
       this.filters = res.data.data
     })
+  },
+  methods: {
+    activateFilter(key, value) {
+      this.selectedFilters = Object.assign({}, this.selectedFilters, {
+        [key]: value
+      })
+
+      this.$router.push({ query: { ...this.selectedFilters } })
+    }
   }
 }
 </script>

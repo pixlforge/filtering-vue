@@ -1947,6 +1947,13 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
 //
 //
 //
@@ -1982,7 +1989,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      filters: {}
+      filters: {},
+      selectedFilters: {}
     };
   },
   mounted: function mounted() {
@@ -1991,6 +1999,14 @@ __webpack_require__.r(__webpack_exports__);
     axios.get(this.endpoint).then(function (res) {
       _this.filters = res.data.data;
     });
+  },
+  methods: {
+    activateFilter: function activateFilter(key, value) {
+      this.selectedFilters = Object.assign({}, this.selectedFilters, _defineProperty({}, key, value));
+      this.$router.push({
+        query: _objectSpread({}, this.selectedFilters)
+      });
+    }
   }
 });
 
@@ -37680,7 +37696,13 @@ var render = function() {
                   {
                     staticClass:
                       "block hover:bg-blue-300 font-semibold hover:text-white hover:no-underline pl-3 py-2",
-                    attrs: { href: "#" }
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.activateFilter(key, value)
+                      }
+                    }
                   },
                   [_vm._v("\n            " + _vm._s(filter) + "\n          ")]
                 )
