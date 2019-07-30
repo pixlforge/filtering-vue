@@ -19,5 +19,6 @@ Route::prefix('/api')->group(function () {
      */
     Route::namespace('Courses')->group(function () {
         Route::get('/courses', 'CourseController@index')->name('courses.index');
+        Route::get('/courses/filters', 'CourseFilterController')->name('courses.filters');
     });
 });

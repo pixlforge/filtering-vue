@@ -1,12 +1,7 @@
 <template>
   <div class="container flex mx-auto">
     <div class="w-1/4 mr-3">
-      <h5 class="text-xs font-black uppercase tracking-wide pl-1 mb-2">
-        Title
-      </h5>
-      <div class="bg-white border-2 border-gray-300 rounded-lg">
-        sdf
-      </div>
+      <AppFilters endpoint="/api/courses/filters"></AppFilters>
     </div>
     <div class="w-3/4 bg-white border-2 border-gray-300 rounded-lg ml-3 p-4">
       <AppCourseList
@@ -21,11 +16,13 @@
 </template>
 
 <script>
-import AppCourseList from "./AppCourseList";
-import AppPagination from '../pagination/AppPagination';
+import AppFilters from './AppFilters'
+import AppCourseList from "./AppCourseList"
+import AppPagination from '../pagination/AppPagination'
 
 export default {
   components: {
+    AppFilters,
     AppCourseList,
     AppPagination,
   },
@@ -34,11 +31,11 @@ export default {
       courses: [],
       meta: {},
       currentPage: 1
-    };
+    }
   },
   mounted() {
-    this.currentPage = this.$route.query.page;
-    this.getCourses();
+    this.currentPage = this.$route.query.page
+    this.getCourses()
   },
   methods: {
     getCourses() {
@@ -47,24 +44,24 @@ export default {
           page: this.currentPage
         }
       }).then(res => {
-          this.courses = res.data.data;
-          this.meta = res.data.meta;
+          this.courses = res.data.data
+          this.meta = res.data.meta
         });
     },
     paginationSwitched(page) {
       if (page === this.meta.current_page) {
-        return;
+        return
       }
 
-      this.currentPage = page;
+      this.currentPage = page
 
-      this.getCourses();
+      this.getCourses()
 
       this.$router.push({
         query: {
           page: this.currentPage
         }
-      });
+      })
     }
   }
 }
