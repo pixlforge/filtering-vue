@@ -1,5 +1,11 @@
 <template>
   <div>
+    <p
+      v-if="filtersInUse"
+      class="bg-red-400 hover:bg-red-300 font-semibold text-white hover:no-underline pl-3 py-2 mb-4"
+      @click.prevent="clearFilters">
+      &times; Clear all filters
+    </p>
     <ul>
       <li
         v-for="(map, key) in filters"
@@ -22,6 +28,15 @@
               {{ filter }}
             </a>
           </li>
+          <li>
+            <a
+              v-if="selectedFilters[key]"
+              href="#"
+              class="block bg-red-400 hover:bg-red-300 font-semibold text-white hover:no-underline pl-3 py-2"
+              @click.prevent="clearFilter(key)">
+              &times; Clear
+            </a>
+          </li>
         </ul>
       </li>
     </ul>
@@ -42,23 +57,38 @@ export default {
       selectedFilters: _.omit(this.$route.query, ['page'])
     }
   },
+  computed: {
+    filtersInUse() {
+      return !_.isEmpty(this.selectedFilters)
+    }
+  },
   mounted() {
     axios.get(this.endpoint).then(res => {
       this.filters = res.data.data
     })
   },
   methods: {
-    activateFilter(key, value) {
-      this.selectedFilters = Object.assign({}, this.selectedFilters, {
-        [key]: value
-      })
-
+    applyFilter() {
       this.$router.push({
         query: {
           ...this.selectedFilters,
           page: 1
         }
       })
+    },
+    clearFilter(key) {
+      this.selectedFilters = _.omit(this.$route.query, [key])
+      this.applyFilter()
+    },
+    clearFilters() {
+      this.selectedFilters = {}
+      this.applyFilter()
+    },
+    activateFilter(key, value) {
+      this.selectedFilters = Object.assign({}, this.selectedFilters, {
+        [key]: value
+      })
+      this.applyFilter()
     }
   }
 }

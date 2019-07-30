@@ -1983,6 +1983,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     endpoint: {
@@ -1996,6 +2011,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       selectedFilters: _.omit(this.$route.query, ['page'])
     };
   },
+  computed: {
+    filtersInUse: function filtersInUse() {
+      return !_.isEmpty(this.selectedFilters);
+    }
+  },
   mounted: function mounted() {
     var _this = this;
 
@@ -2004,13 +2024,24 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     });
   },
   methods: {
-    activateFilter: function activateFilter(key, value) {
-      this.selectedFilters = Object.assign({}, this.selectedFilters, _defineProperty({}, key, value));
+    applyFilter: function applyFilter() {
       this.$router.push({
         query: _objectSpread({}, this.selectedFilters, {
           page: 1
         })
       });
+    },
+    clearFilter: function clearFilter(key) {
+      this.selectedFilters = _.omit(this.$route.query, [key]);
+      this.applyFilter();
+    },
+    clearFilters: function clearFilters() {
+      this.selectedFilters = {};
+      this.applyFilter();
+    },
+    activateFilter: function activateFilter(key, value) {
+      this.selectedFilters = Object.assign({}, this.selectedFilters, _defineProperty({}, key, value));
+      this.applyFilter();
     }
   }
 });
@@ -37700,6 +37731,23 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
+    _vm.filtersInUse
+      ? _c(
+          "p",
+          {
+            staticClass:
+              "bg-red-400 hover:bg-red-300 font-semibold text-white hover:no-underline pl-3 py-2 mb-4",
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.clearFilters($event)
+              }
+            }
+          },
+          [_vm._v("\n    × Clear all filters\n  ")]
+        )
+      : _vm._e(),
+    _vm._v(" "),
     _c(
       "ul",
       _vm._l(_vm.filters, function(map, key) {
@@ -37716,30 +37764,52 @@ var render = function() {
           _c(
             "ul",
             { staticClass: "bg-white border-2 border-gray-300 rounded-lg" },
-            _vm._l(map.options, function(filter, value) {
-              return _c("li", { key: value }, [
-                _c(
-                  "a",
-                  {
-                    staticClass:
-                      "block hover:bg-blue-300 font-semibold hover:text-white hover:no-underline pl-3 py-2",
-                    class: {
-                      "bg-blue-400 text-white":
-                        _vm.selectedFilters[key] === value
-                    },
-                    attrs: { href: "#" },
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        return _vm.activateFilter(key, value)
+            [
+              _vm._l(map.options, function(filter, value) {
+                return _c("li", { key: value }, [
+                  _c(
+                    "a",
+                    {
+                      staticClass:
+                        "block hover:bg-blue-300 font-semibold hover:text-white hover:no-underline pl-3 py-2",
+                      class: {
+                        "bg-blue-400 text-white":
+                          _vm.selectedFilters[key] === value
+                      },
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.activateFilter(key, value)
+                        }
                       }
-                    }
-                  },
-                  [_vm._v("\n            " + _vm._s(filter) + "\n          ")]
-                )
+                    },
+                    [_vm._v("\n            " + _vm._s(filter) + "\n          ")]
+                  )
+                ])
+              }),
+              _vm._v(" "),
+              _c("li", [
+                _vm.selectedFilters[key]
+                  ? _c(
+                      "a",
+                      {
+                        staticClass:
+                          "block bg-red-400 hover:bg-red-300 font-semibold text-white hover:no-underline pl-3 py-2",
+                        attrs: { href: "#" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.clearFilter(key)
+                          }
+                        }
+                      },
+                      [_vm._v("\n            × Clear\n          ")]
+                    )
+                  : _vm._e()
               ])
-            }),
-            0
+            ],
+            2
           )
         ])
       }),
